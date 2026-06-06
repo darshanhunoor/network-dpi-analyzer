@@ -16,8 +16,8 @@ This document explains **everything** about this project - from basic networking
 7. [Deep Dive: Each Component](#7-deep-dive-each-component)
 8. [How SNI Extraction Works](#8-how-sni-extraction-works)
 9. [How Blocking Works](#9-how-blocking-works)
-10. [Building and Running](#10-building-and-running)
-11. [Understanding the Output](#11-understanding-the-output)
+10.[Building and Running](#10-building-and-running)
+11.[Understanding the Output](#11-understanding-the-output)
 
 ---
 
@@ -50,13 +50,13 @@ When you visit a website, data travels through multiple "layers":
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│ Layer 7: Application    │ HTTP, TLS, DNS               │
+│ Layer 7: Application    │ HTTP, TLS, DNS                │
 ├─────────────────────────────────────────────────────────┤
-│ Layer 4: Transport      │ TCP (reliable), UDP (fast)   │
+│ Layer 4: Transport      │ TCP (reliable), UDP (fast)    │
 ├─────────────────────────────────────────────────────────┤
-│ Layer 3: Network        │ IP addresses (routing)       │
+│ Layer 3: Network        │ IP addresses (routing)        │
 ├─────────────────────────────────────────────────────────┤
-│ Layer 2: Data Link      │ MAC addresses (local network)│
+│ Layer 2: Data Link      │ MAC addresses (local network) │
 └─────────────────────────────────────────────────────────┘
 ```
 
@@ -820,17 +820,17 @@ Packet arrives
       │
       ▼
 ┌─────────────────────────────────┐
-│ Is source IP in blocked list?  │──Yes──► DROP
+│ Is source IP in blocked list?   │──Yes──► DROP
 └───────────────┬─────────────────┘
                 │No
                 ▼
 ┌─────────────────────────────────┐
-│ Is app type in blocked list?   │──Yes──► DROP
+│ Is app type in blocked list?    │──Yes──► DROP
 └───────────────┬─────────────────┘
                 │No
                 ▼
 ┌─────────────────────────────────┐
-│ Does SNI match blocked domain? │──Yes──► DROP
+│ Does SNI match blocked domain?  │──Yes──► DROP
 └───────────────┬─────────────────┘
                 │No
                 ▼
@@ -925,7 +925,7 @@ python3 generate_test_pcap.py
 
 ```
 ╔══════════════════════════════════════════════════════════════╗
-║              DPI ENGINE v2.0 (Multi-threaded)                 ║
+║              DPI ENGINE v2.0 (Multi-threaded)                ║
 ╠══════════════════════════════════════════════════════════════╣
 ║ Load Balancers:  2    FPs per LB:  2    Total FPs:  4        ║
 ╚══════════════════════════════════════════════════════════════╝
@@ -936,17 +936,17 @@ python3 generate_test_pcap.py
 [Reader] Processing packets...
 [Reader] Done reading 77 packets
 
-╔══════════════════════════════════════════════════════════════╗
+╔═══════════════════════════════════════════════════════════════╗
 ║                      PROCESSING REPORT                        ║
-╠══════════════════════════════════════════════════════════════╣
+╠═══════════════════════════════════════════════════════════════╣
 ║ Total Packets:                77                              ║
 ║ Total Bytes:                5738                              ║
 ║ TCP Packets:                  73                              ║
 ║ UDP Packets:                   4                              ║
-╠══════════════════════════════════════════════════════════════╣
+╠═══════════════════════════════════════════════════════════════╣
 ║ Forwarded:                    69                              ║
 ║ Dropped:                       8                              ║
-╠══════════════════════════════════════════════════════════════╣
+╠═══════════════════════════════════════════════════════════════╣
 ║ THREAD STATISTICS                                             ║
 ║   LB0 dispatched:             53                              ║
 ║   LB1 dispatched:             24                              ║
@@ -954,16 +954,16 @@ python3 generate_test_pcap.py
 ║   FP1 processed:               0                              ║
 ║   FP2 processed:               0                              ║
 ║   FP3 processed:              24                              ║
-╠══════════════════════════════════════════════════════════════╣
+╠═══════════════════════════════════════════════════════════════╣
 ║                   APPLICATION BREAKDOWN                       ║
-╠══════════════════════════════════════════════════════════════╣
+╠═══════════════════════════════════════════════════════════════╣
 ║ HTTPS                39  50.6% ##########                     ║
 ║ Unknown              16  20.8% ####                           ║
 ║ YouTube               4   5.2% # (BLOCKED)                    ║
 ║ DNS                   4   5.2% #                              ║
 ║ Facebook              3   3.9%                                ║
 ║ ...                                                           ║
-╚══════════════════════════════════════════════════════════════╝
+╚═══════════════════════════════════════════════════════════════╝
 
 [Detected Domains/SNIs]
   - www.youtube.com -> YouTube
