@@ -104,19 +104,44 @@ AppType sniToAppType(const std::string& sni) {
         return AppType::WHATSAPP;
     }
     
-    // Twitter/X
-    if (lower_sni.find("twitter") != std::string::npos ||
+    // Netflix (check before Twitter since it can be confused with t.co)
+    if (lower_sni.find("netflix") != std::string::npos ||
+        lower_sni.find("nflxvideo") != std::string::npos ||
+        lower_sni.find("nflximg") != std::string::npos ||
+        lower_sni.find("nflx.net") != std::string::npos ||
+        lower_sni.find("nflx.io") != std::string::npos ||
+        lower_sni.find("nflxext") != std::string::npos ||
+        lower_sni.find("nflxp") != std::string::npos) {
+        return AppType::NETFLIX;
+    }
+    
+    // Microsoft (check before Twitter)
+    if (lower_sni.find("microsoft") != std::string::npos ||
+        lower_sni.find("msn.com") != std::string::npos ||
+        lower_sni.find("office") != std::string::npos ||
+        lower_sni.find("azure") != std::string::npos ||
+        lower_sni.find("live.com") != std::string::npos ||
+        lower_sni.find("outlook") != std::string::npos ||
+        lower_sni.find("bing") != std::string::npos ||
+        lower_sni.find("windows.net") != std::string::npos ||
+        lower_sni.find("sharepoint") != std::string::npos) {
+        return AppType::MICROSOFT;
+    }
+    
+    // Twitter/X (check after Netflix and Microsoft to avoid false matches)
+    if ((lower_sni.find("twitter") != std::string::npos ||
         lower_sni.find("twimg") != std::string::npos ||
-        lower_sni.find("x.com") != std::string::npos ||
-        lower_sni.find("t.co") != std::string::npos) {
+        lower_sni.find("x.com") != std::string::npos) &&
+        lower_sni.find("netflix") == std::string::npos &&
+        lower_sni.find("microsoft") == std::string::npos) {
         return AppType::TWITTER;
     }
     
-    // Netflix
-    if (lower_sni.find("netflix") != std::string::npos ||
-        lower_sni.find("nflxvideo") != std::string::npos ||
-        lower_sni.find("nflximg") != std::string::npos) {
-        return AppType::NETFLIX;
+    // Special case for t.co (Twitter's URL shortener) - only if no other app matched
+    if (lower_sni.find("t.co") != std::string::npos &&
+        lower_sni.find("netflix") == std::string::npos &&
+        lower_sni.find("microsoft") == std::string::npos) {
+        return AppType::TWITTER;
     }
     
     // Amazon
@@ -125,17 +150,6 @@ AppType sniToAppType(const std::string& sni) {
         lower_sni.find("cloudfront") != std::string::npos ||
         lower_sni.find("aws") != std::string::npos) {
         return AppType::AMAZON;
-    }
-    
-    // Microsoft
-    if (lower_sni.find("microsoft") != std::string::npos ||
-        lower_sni.find("msn.com") != std::string::npos ||
-        lower_sni.find("office") != std::string::npos ||
-        lower_sni.find("azure") != std::string::npos ||
-        lower_sni.find("live.com") != std::string::npos ||
-        lower_sni.find("outlook") != std::string::npos ||
-        lower_sni.find("bing") != std::string::npos) {
-        return AppType::MICROSOFT;
     }
     
     // Apple
